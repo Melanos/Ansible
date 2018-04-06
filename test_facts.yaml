@@ -1,0 +1,29 @@
+---
+- hosts: "{{ group }}"
+  connection: local
+  tasks:
+    - name: GET CREDENTIALS
+      include_vars: creds.yml
+
+    - name: DEFINE CONNECTION
+      set_fact:
+         connection:
+            authorize: yes
+            host: "{{ inventory_hostname }}"
+            username: "{{ creds['username'] }}"
+            password: "{{ creds['password'] }}"
+            auth_pass: "{{ creds['auth_pass'] }}"
+
+    - name: Gather network facts
+      ios_facts:
+        authorize: yes
+        host: "{{ inventory_hostname }}"
+        username: "{{ creds['username'] }}"
+        password: "{{ creds['password'] }}"
+        auth_pass: "{{ creds['auth_pass'] }}"
+        gather_subset:
+        - "!interfaces"
+        - "!config"
+      
+    - debug:
+        msg: "Device {{ ansible_net_hostname }} has serial number {{ ansible_net_serialnum }} and version {{ ansible_net_version }}."
