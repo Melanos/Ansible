@@ -47,10 +47,3 @@
     - { role: slack,  message: '{{ inventory_hostname }} configuration backup completed'}
 
 
-    #- name: Send notification message via Slack
-    #  local_action:
-    #    module: slack
-    #    domain: coxcomet.slack.com
-    #    token: T44UKF7DW/B9XLZES7M/WqJ5rcPZUgWWAH8YcEBhAeoe
-    #    channel: "#ansible"
-    #    msg: "{{ inventory_hostname }} configuration backup completed"
