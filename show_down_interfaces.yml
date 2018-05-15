@@ -1,0 +1,28 @@
+---
+- hosts: myswitches
+  gather_facts: yes
+  connection: local
+
+
+  tasks:
+  - name: GET CREDENTIALS
+    include_vars: creds.yml
+
+  - name: DEFINE CONNECTION
+    set_fact:
+       connection:
+          authorize: yes
+          host: "{{ inventory_hostname }}"
+          username: "{{ creds['username'] }}"
+          password: "{{ creds['password'] }}"
+          auth_pass: "{{ creds['auth_pass'] }}"
+
+  - name: RUN SHOW INTERFACES THAT ARE DOWN
+    ios_command:
+      provider: "{{ connection }}"
+      commands:
+         #- show int | i notconnect
+         -  show int | in is down|input never, output never
+    register: ipbrief
+
+  - debug: var=ipbrief.stdout_lines

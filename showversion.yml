@@ -1,0 +1,26 @@
+---
+- hosts: myswitches
+  gather_facts: false
+  connection: local
+
+  tasks:
+  - name: GET CREDENTIALS
+    include_vars: creds.yml
+
+  - name: DEFINE CONNECTION
+    set_fact:
+       connection:
+          host: "{{ inventory_hostname }}"
+          username: "{{ creds['username'] }}"
+          password: "{{ creds['password'] }}"
+
+  - name: run show version on ios device
+    ios_command:
+      provider: "{{ connection }}"
+      commands:
+         - show version
+    register: version
+
+  - debug: var=version.stdout_lines
+  
+
